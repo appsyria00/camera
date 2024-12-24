@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بحث عن الهاتف المسروق</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .search-container {
+            text-align: center;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 500px;
+        }
+
+        .search-title {
+            color: #333;
+            font-size: 24px;
+        }
+
+        #searchInput {
+            padding: 10px;
+            width: 80%;
+            margin: 15px 0;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        #video {
+            width: 100%;
+            height: auto;
+            margin-top: 15px;
+        }
+
+        .red-box {
+            background-color: #ffe6e6;
+            color: red;
+            font-weight: bold;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .red-box:hover {
+            background-color: #ffcccc;
+        }
+
+        .green {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <h1 class="search-title">بحث عن الهاتف المسروق</h1>
+        <input type="text" id="searchInput" placeholder="أدخل الرقم أو السيريال هنا">
+        <button onclick="searchNumber()">بحث</button>
+        <button onclick="startScanner()">مسح كود IMEI</button>
+        <video id="video" autoplay></video>
+        <div id="result"></div>
+    </div>
+
+    <script src="https://appsyria00.github.io/00000/"></script>
+    <script>
+        // قائمة الأجهزة المسروقة
+        const stolenDevices = [
+            '123456', '869404030672236', '865812030619489', '0000', '869404030672228',
+            '813HEDU9226KL', 'A123BCD', 'XYZ9990', '353789912998888', '868918047999408'
+        ];
+
+        // وظيفة البحث
+        function searchNumber() {
+            const input = document.getElementById('searchInput').value.trim(); // قراءة النص المدخل
+            const result = document.getElementById('result'); // مكان عرض النتيجة
+
+            if (input !== '') {
+                if (stolenDevices.includes(input)) {
+                    result.innerHTML = `
+                        <div class="red-box" onclick="contactOnWhatsApp()">
+                            <strong>تحذير: جهاز مسروق</strong>
+                            <p>اضغط هنا للتواصل مع الرقم المخصص</p>
+                        </div>
+                    `;
+                } else {
+                    result.innerHTML = '<p class="green">الجهاز غير مسروق.</p>';
+                }
+            } else {
+                result.innerHTML = '<p class="orange">يرجى إدخال رقم أو سيريال صحيح للبحث عنه.</p>';
+            }
+        }
+
+        // وظيفة التواصل عبر WhatsApp
+        function contactOnWhatsApp() {
+            const phoneNumber = '+17793867303'; // رقم …
