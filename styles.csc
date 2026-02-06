@@ -1,111 +1,68 @@
 body {
     margin: 0;
     padding: 0;
-    background: #f0f2f5;
-    font-family: system-ui, -apple-system, sans-serif;
+    background-color: #f0f2f5;
+    font-family: Helvetica, Arial, sans-serif;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    min-height: 100vh;
-    padding-top: 20px;
 }
 
 .fb-container {
     width: 100%;
-    max-width: 400px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,.1);
-    overflow: hidden;
+    max-width: 414px; /* حجم شاشة الهاتف المثالي */
+    background: #fff;
+    min-height: 100vh;
 }
 
-.header {
-    background: #1877f2;
-    padding: 12px;
+.header-blue {
+    background-color: #1877f2;
+    padding: 15px;
     text-align: center;
-    color: white;
-    font-size: 24px;
+    color: #fff;
+    font-size: 28px;
     font-weight: bold;
-    letter-spacing: -1px;
 }
 
-.form-area {
+.login-form {
     padding: 20px;
+    margin-top: 10px;
 }
 
 input {
     width: 100%;
-    padding: 14px;
-    margin: 8px 0;
+    height: 50px;
+    padding: 12px;
+    margin-bottom: 12px;
     border: 1px solid #dddfe2;
     border-radius: 6px;
     font-size: 16px;
-    box-sizing: border-box;
-    outline: none;
+    box-sizing: border-box; /* لضمان عدم خروج الحواف */
 }
 
-input:focus {
-    border-color: #1877f2;
-    box-shadow: 0 0 0 2px #e7f3ff;
-}
-
-.login-btn {
+.btn-login {
     width: 100%;
-    padding: 14px;
-    background: #1877f2;
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
+    height: 48px;
+    background-color: #1877f2;
     border: none;
     border-radius: 6px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
     cursor: pointer;
-    margin-top: 10px;
 }
 
-.links {
+.forgot-link {
+    display: block;
     text-align: center;
     margin: 15px 0;
+    color: #1877f2;
+    text-decoration: none;
     font-size: 14px;
 }
 
-.links a {
-    color: #1877f2;
-    text-decoration: none;
-}
-
-.footer {
+.footer-meta {
+    margin-top: 50px;
     text-align: center;
-    padding: 20px;
-    font-size: 13px;
     color: #8a8d91;
-    line-height: 1.6;
-}
-
-/* تصميم اللودر */
-#loader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: white;
-    z-index: 10000;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #1877f2;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    font-size: 12px;
 }
